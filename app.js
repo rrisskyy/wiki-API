@@ -21,35 +21,37 @@ const Article = mongoose.model('Article', wikiSchema)
 
 
 
-app.get('/articles', (req, res) => {
-    Article.find({}, (err, articlesFound) => {
-        res.send(articlesFound);
-    })
-})
 
-app.post('/articles', (req, res) => {
-    const newArticle = new Article ({
-        title: req.body.title,
-        content: req.body.content
-    });
-    newArticle.save(err => {
-        if(err) {
-            res.send(err);
-        } else {
-            res.send("Sukses menambahkan item!");
-        }
-    });
-})
-
-app.delete('/articles', (req, res) => {
-    Article.deleteMany({}, (err) => {
-        if(err){
-            res.send("Berhasil Menghapus Item!")
-        } else {
-            res.send(err)
-        }
+app.route('/articles')
+    .get((req, res) => {
+        Article.find({}, (err, articlesFound) => {
+            res.send(articlesFound);
+        })
     })
-})
+
+    .post((req, res) => {
+        const newArticle = new Article ({
+            title: req.body.title,
+            content: req.body.content
+        });
+        newArticle.save(err => {
+            if(err) {
+                res.send(err);
+            } else {
+                res.send("Sukses menambahkan item!");
+            }
+        });
+    })
+    
+    .delete((req, res) => {
+        Article.deleteMany({}, (err) => {
+            if(err){
+                res.send("Berhasil Menghapus Item!")
+            } else {
+                res.send(err)
+            }
+        })
+    });
 
 
 
