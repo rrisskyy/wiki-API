@@ -65,18 +65,32 @@ app.route('/articles/:articleTitle')
                 res.send("Artikel Tidak Ada!.");
             }
         })
+    })
     .put((req, res) => {
-        Article.update(
+        Article.updateOne(
             {title: req.params.articleTitle},
             {title: req.body.title, content: req.body.content},
-            {overwrite: true},
             (err) => {
                 if(!err) {
                     res.send("Sukses Mengupdate Artikel!");
+                } else {
+                    res.send(err);
                 }
             }
-        )
-    });
+        );
+    })
+    .patch((req, res) => {
+        Article.updateOne(
+            {title: req.params.articleTitle},
+            {$set: req.body},
+            (err) => {
+                if(!err) {
+                    res.send("Sukses Mengupdate Artikel!");
+                } else {
+                    res.send(err);
+                }
+            }
+        );
     });
 
 
