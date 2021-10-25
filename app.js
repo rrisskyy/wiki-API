@@ -17,15 +17,15 @@ const wikiSchema = mongoose.Schema({
     content:String
 });
 
-const Article = mongoose.model('Article', wikiSchema)
+const Article = mongoose.model('Article', wikiSchema) //Model
 
 
-
+/////////////////////////////////////////Request Targeting All Article/////////////////////////////////////////
 
 app.route('/articles')
     .get((req, res) => {
-        Article.find({}, (err, articlesFound) => {
-            res.send(articlesFound);
+        Article.find({}, (err, articleFound) => {
+            res.send(articleFound);
         })
     })
 
@@ -54,6 +54,30 @@ app.route('/articles')
     });
 
 
+
+/////////////////////////////////////////Request Targeting Specific Article/////////////////////////////////////////    
+app.route('/articles/:articleTitle')
+    .get((req, res) => {
+        Article.findOne({title: req.params.articleTitle}, (err, articleFound) => {
+            if(articleFound) {
+                res.send(articleFound);
+            } else {
+                res.send("Artikel Tidak Ada!.");
+            }
+        })
+    .put((req, res) => {
+        Article.update(
+            {title: req.params.articleTitle},
+            {title: req.body.title, content: req.body.content},
+            {overwrite: true},
+            (err) => {
+                if(!err) {
+                    res.send("Sukses Mengupdate Artikel!");
+                }
+            }
+        )
+    });
+    });
 
 
 const PORT = process.env.PORT || 3000;
